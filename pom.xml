@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.cognitor.cassandra</groupId>
+    <groupId>com.alianza</groupId>
     <artifactId>cassandra-migration-parent</artifactId>
     <version>2.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -12,7 +12,6 @@
 
     <modules>
         <module>cassandra-migration</module>
-        <module>cassandra-migration-spring-boot-starter</module>
     </modules>
 
     <description>
@@ -36,20 +35,15 @@
     </scm>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
         <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+            <id>releases</id>
+            <url>https://alianza.artifactoryonline.com/alianza/libs-release</url>
         </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>https://alianza.artifactoryonline.com/alianza/libs-snapshot</url>
+        </snapshotRepository>
     </distributionManagement>
-
-    <issueManagement>
-        <url>https://github.com/patka/cassandra-migration/issues</url>
-        <system>GitHub Issues</system>
-    </issueManagement>
 
     <licenses>
         <license>
