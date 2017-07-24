@@ -113,3 +113,6 @@ In your properties file you will have three new properties that can be set:
 * cassandra.migration.keyspace-name Specifies the keyspace that should be migrated
 * cassandra.migration.script-location Overrides the default script location
 * cassandra.migration.strategy Can either be IGNORE_DUPLICATES or FAIL_ON_DUPLICATES
+
+
+Wercker [build URL](https://app.wercker.com/#Alianza/cassandra-migration/build/5976441e1ee20400014c20be)
