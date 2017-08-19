@@ -170,7 +170,7 @@ public class MigrationRepository {
 
     private List<ScriptFile> scanForScripts(String scriptPath) throws IOException, URISyntaxException {
         if (scriptPath.startsWith("file"))
-            return scanForScriptsOnFileSystem(scriptPath.substring(7));
+            return scanForScriptsOnFileSystem(scriptPath);
 
         LOGGER.debug("Scanning for cql migration scripts in " + scriptPath);
         Enumeration<URL> scriptResources = getClass().getClassLoader().getResources(scriptPath);
