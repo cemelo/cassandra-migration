@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -168,6 +169,9 @@ public class MigrationRepository {
     }
 
     private List<ScriptFile> scanForScripts(String scriptPath) throws IOException, URISyntaxException {
+        if (scriptPath.startsWith("file"))
+            return scanForScriptsOnFileSystem(scriptPath.substring(7));
+
         LOGGER.debug("Scanning for cql migration scripts in " + scriptPath);
         Enumeration<URL> scriptResources = getClass().getClassLoader().getResources(scriptPath);
         while (scriptResources.hasMoreElements()) {
@@ -184,6 +188,36 @@ public class MigrationRepository {
                 }
             }
         }
+        List<ScriptFile> scripts = new ArrayList<>(scriptCollector.getScriptFiles());
+        LOGGER.info(format("Found %d migration scripts", scripts.size()));
+        sort(scripts);
+        return scripts;
+    }
+
+    private List<ScriptFile> scanForScriptsOnFileSystem(String scriptPath) throws IOException, URISyntaxException {
+        LOGGER.debug("Scanning for cql migration scripts in " + scriptPath);
+
+        File scriptResourcesDir = new File(scriptPath);
+        if (!scriptResourcesDir.exists() || !scriptResourcesDir.isDirectory())
+            return Collections.emptyList();
+
+        File[] resources = scriptResourcesDir.listFiles();
+        if (resources == null)
+            return Collections.emptyList();
+
+        for (File resource : resources) {
+            LOGGER.debug("Potential script file: {}", resource.getAbsolutePath());
+
+            if (isMigrationScript(resource.getAbsolutePath())) {
+                String scriptName = extractScriptName(resource.getAbsolutePath());
+                int version = extractScriptVersion(scriptName);
+                scriptCollector.collect(new ScriptFile(version, resource.getAbsolutePath(), scriptName));
+            } else {
+                LOGGER.warn(format("Ignoring file %s because it is not a cql file.",
+                    resource.getAbsolutePath()));
+            }
+        }
+
         List<ScriptFile> scripts = new ArrayList<>(scriptCollector.getScriptFiles());
         LOGGER.info(format("Found %d migration scripts", scripts.size()));
         sort(scripts);
